@@ -82,6 +82,8 @@ def saha_boltzmann_analysis(inp_data_idx, experimentList, sample_list, lineData,
     wavelengths = np.concatenate([w1, w2])
     spectraAll = np.concatenate([spectraData_1, spectraData_2])
 
+       
+
     # Sample metadata
     sample_name = experimentList[inp_data_idx].replace(".json", "").replace("/", "_")
     Cont = sample_list[sample_list['Sample Name'].str.replace("/", "_") == sample_name].copy()
@@ -222,6 +224,7 @@ def saha_boltzmann_analysis(inp_data_idx, experimentList, sample_list, lineData,
         # Concentration calculation
         C_u = (SahaBoltzmann['U_I']*np.exp(SahaBoltzmann['Intercept']))/np.sum(SahaBoltzmann['U_I']*np.exp(SahaBoltzmann['Intercept']))
         SahaBoltzmann['C'] = C_u
+        print(f"SahaBoltzmann: {SahaBoltzmann}")
 
         SahaBoltzmann_reduced = SahaBoltzmann[(SahaBoltzmann['Temp'] < 16000) & (SahaBoltzmann['Temp'] > 8800) & (SahaBoltzmann['R2'] > 0.945)]
         C_calc = (SahaBoltzmann_reduced['U_I']*np.exp(SahaBoltzmann_reduced['Intercept']))/np.sum(SahaBoltzmann_reduced['U_I']*np.exp(SahaBoltzmann_reduced['Intercept']))
@@ -233,11 +236,12 @@ def saha_boltzmann_analysis(inp_data_idx, experimentList, sample_list, lineData,
 # Main execution block
 # -----------------------------
 def main():
-    inp_data_idx = 14  # Index of the experiment to process
+    inp_data_idx = 39  # Index of the experiment to process
     sample_list, Eion, QparFinal, lineData = load_metadata()
+    print(f"Sample list: {sample_list}") 
+
     experimentList = [f for f in os.listdir(EXPERIMENT_FOLDER) if f.endswith('.json')]
-    #experimentList.sort()
-    
+    #experimentList.sort()   
 
     SB = saha_boltzmann_analysis(inp_data_idx, experimentList, sample_list, lineData, Eion, QparFinal)
     print(f"SB={SB}")
