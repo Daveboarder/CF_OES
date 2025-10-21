@@ -30,6 +30,8 @@ h = 6.62607015e-27 #erg*s #Planck  # J.s
 me = electron_mass*1000  # g
 e = elementary_charge  # C
 
+Te = 12000  # Initial electron temperature in K
+Ne = 1.79e+18  # Initial electron density in cm^-3	
 #------------------------------
 # Voigt profile function
 #------------------------------
@@ -146,7 +148,7 @@ def saha_boltzmann_analysis(inp_data_idx, experimentList, sample_list, lineData,
             if SahBol_data.shape[0] > 1 and Cc != 0:
                 while dT > 50:#determine temperature for an element
                     PF_I, PF_II = partition_function(Qpar_temp['Elem_name'].values[0], T0)
-                    Ne = 1  # Placeholder, set electron density
+                    #Ne = 1  # Placeholder, set electron density
                     S10 = (((2*PF_II)/(Ne*PF_I))*((me*kb*T0)/((h**2)/(2*np.pi)))**(1.5))*np.exp(-(Eion_temp['Eion'].values[0]*1.60217e-12)/(kb*T0)) if not Eion_temp.empty else 1
                     # Transition coefficient
                     kt = ((lineData_temp['Wl']**4)/(8*np.pi*c)) * (lineData_temp['Ak']*lineData_temp['gk']*np.exp(-(lineData_temp['Ei']*1.60217e-12)/(kb*T0))) * (1-np.exp(-1.60217e-12*(lineData_temp['Ek']-lineData_temp['Ei'])/(kb*T0))) / np.where(lineData_temp['ion.state']=="I", PF_I, PF_II)
